@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documents</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="div-header">
+        <div class="div-logo">
+            <a href="./" class="logo-link">
+                <img src="./images/quod-logo1.png" alt="Logo" class="logo">
+            </a>
+        </div>
+        <div class="div-title">
+            <h2>Soluções antifraude</h2>
+        </div>    
+    </div>
+    <div class="div-main">
+        <div class="div-box2">
+            <div class="div-box-header">
+                <h3>Verificar documentos</h3>
+            </div>
+            <form action="/upload/document" method="post" enctype="multipart/form-data">
+                <div class="div-box-content">
+                    <div class="div-box-content1">
+                        <div class="div-box-content-center">               
+                            <label for="document-frente">Imagem do documento frente:</label>
+                            <input type="file" id="document-frente" name="documentFrente" accept="image/png, image/jpeg" />
+                        </div>
+                    </div>  
+                
+                    <div class="div-box-content2">
+                        <div class="div-box-content-center">
+                            <label for="document-verso">Imagem do documento verso:</label>
+                            <input type="file" id="document-verso" name="documentVerso" accept="image/png, image/jpeg" />
+                        </div>
+                    </div>  
+
+                </div>  
+                <div class="div-box-footer">
+                    <button onclick=enviar(event) type="button" class="btn">Enviar</button>
+                </div>
+            </form>
+            <script>
+                function enviar(event) {
+                    event.preventDefault();
+
+                    const frente = document.getElementById("document-frente").files[0];
+                    const verso = document.getElementById("document-verso").files[0];
+
+                    if (!frente || !verso) {
+                        alert("Por favor, envie as duas imagens.");
+                        return;
+                    }
+
+                    const formData = new FormData();
+                    formData.append("documentFrente", frente);
+                    formData.append("documentVerso", verso);
+
+                    fetch("/upload/document", {
+                        method: "POST",
+                        body: formData
+                    })
+                    .then(res => res.text().then(text => {
+                        if (res.ok) {
+                            alert("Enviado com sucesso");
+                        } else {
+                            alert("Erro ao enviar: " + text);
+                            console.error("Erro detalhado:", text);
+                        }
+                    }))
+                    .catch(err => {
+                        alert("Erro na conexão com o servidor");
+                    });
+                }
+            </script>
+           
+        </div>
+    </div>
+</body>
+</html>
